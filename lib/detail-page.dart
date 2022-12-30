@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:automation/services/auth.dart';
 import 'package:automation/services/getDashboardData.dart';
@@ -59,7 +60,7 @@ class _DetailPageState extends State<DetailPage> {
 
     print('object-----------$data');
     detail = await Webservices.getData('', data);
-    log("detail---------detail----${detail['powerSpeed']}");
+    // log("detail---------detail----${detail['powerSpeed']}");
     for(int i=0;i<detail['powerSpeed'].length;i++){
       var time=detail['powerSpeed'][i]['Time_S'].toString().split(':')[0];
       var time1=detail['powerSpeed'][i]['Time_S'].toString().split(':')[1];
@@ -67,7 +68,7 @@ class _DetailPageState extends State<DetailPage> {
       // log('message-----${detail['powerSpeed'][i]['Time_S']}---------${time} --------${time2}');
       var fTime=(int.parse(time.toString())*60)+(int.parse(time1.toString())+(int.parse(time.toString())/60));
       detail['powerSpeed'][i]['final_time']=double.parse(fTime.toString());
-      log('ftime------------------${fTime}');
+      // log('ftime------------------${fTime}');
     }
 
 
@@ -88,9 +89,33 @@ class _DetailPageState extends State<DetailPage> {
     return Scaffold(
       backgroundColor: MyColors.primaryColor,
       appBar: appBar(
+
           context: context,
           appBarType: AppBarType.sub,
           title: 'Information',
+          widgetTitle: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+            children: [
+            Text("Information"),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+              MainHeadingText(
+
+                text: '${widget.data['CurrentSite']}',
+                fontFamily: 'bold',
+                fontSize: 22,
+                color: MyColors.white,
+              ),
+              MainHeadingText(
+                text: '${widget.data['Connect_Feeder']}',
+                fontFamily: 'regular',
+                fontSize: 14,
+                color: MyColors.white,
+              ),
+            ],)
+          ],),
           scaffoldKey: scaffoldKey),
       body: load
           ? CustomLoader()
@@ -100,19 +125,19 @@ class _DetailPageState extends State<DetailPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   vSizedBox,
-                  MainHeadingText(
-                    text: '${widget.data['CurrentSite']}',
-                    fontFamily: 'bold',
-                    fontSize: 22,
-                    color: MyColors.white,
-                  ),
-                  MainHeadingText(
-                    text: '${widget.data['Connect_Feeder']}',
-                    fontFamily: 'regular',
-                    fontSize: 14,
-                    color: MyColors.white,
-                  ),
-                  vSizedBox4,
+                  // MainHeadingText(
+                  //   text: '${widget.data['CurrentSite']}',
+                  //   fontFamily: 'bold',
+                  //   fontSize: 22,
+                  //   color: MyColors.white,
+                  // ),
+                  // MainHeadingText(
+                  //   text: '${widget.data['Connect_Feeder']}',
+                  //   fontFamily: 'regular',
+                  //   fontSize: 14,
+                  //   color: MyColors.white,
+                  // ),
+                  // vSizedBox4,
                   Row(
                     children: [
                       Expanded(
@@ -129,7 +154,7 @@ class _DetailPageState extends State<DetailPage> {
                                 ),
                               ),
                               SizedBox(
-                                height: 170,
+                                height: 150,
                                 child: SfRadialGauge(
                                   enableLoadingAnimation: true,
                                   animationDuration: 3500,
@@ -140,7 +165,7 @@ class _DetailPageState extends State<DetailPage> {
                                           width: 8,
                                           animationDuration: 1200,
                                           // animationType: ,
-                                          value: double.parse(detail['data']['Power']??widget.power),
+                                          value: double.parse(detail['data']['Power']??widget.power)/10.5,
                                           color: MyColors.secondarycolor,
                                           cornerStyle: CornerStyle.bothCurve,
                                           enableAnimation: true,
@@ -175,14 +200,15 @@ class _DetailPageState extends State<DetailPage> {
                                             BorderRadius.circular(100)),
                                     child: Center(
                                         child: MainHeadingText(
-                                            text: '${detail['data']['Power']??widget.power}',
+                                            // text: '${detail['data']['Power']??widget.power}',
+                                            text: '-50',
                                             fontSize: 10,
                                             fontFamily: 'bold',
                                             color: MyColors.white)),
                                   )),
                               Positioned(
                                   bottom: 3,
-                                  right: 85,
+                                  right: 75,
                                   child: Container(
                                     width: 30,
                                     height: 30,
@@ -192,7 +218,7 @@ class _DetailPageState extends State<DetailPage> {
                                             BorderRadius.circular(100)),
                                     child: Center(
                                         child: MainHeadingText(
-                                            text: '100',
+                                            text: '1000',
                                             fontSize: 10,
                                             fontFamily: 'bold',
                                             color: MyColors.white)),
@@ -207,14 +233,14 @@ class _DetailPageState extends State<DetailPage> {
                               child: MainHeadingText(
                                 text: 'POWER',
                                 fontFamily: 'medium',
-                                fontSize: 38,
+                                fontSize: 30,
                                 color: MyColors.white,
                               ),
                             ),
                           ))
                     ],
                   ),
-                  vSizedBox2,
+                  vSizedBox,
                   Row(
                     children: [
                       Expanded(
@@ -225,7 +251,7 @@ class _DetailPageState extends State<DetailPage> {
                               child: MainHeadingText(
                                 text: 'SPEED',
                                 fontFamily: 'medium',
-                                fontSize: 38,
+                                fontSize: 30,
                                 color: MyColors.white,
                               ),
                             ),
@@ -244,7 +270,7 @@ class _DetailPageState extends State<DetailPage> {
                                 ),
                               ),
                               SizedBox(
-                                height: 170,
+                                height: 150,
                                 child: SfRadialGauge(
                                   enableLoadingAnimation: true,
                                   animationDuration: 3500,
@@ -255,7 +281,8 @@ class _DetailPageState extends State<DetailPage> {
                                           width: 8,
                                           animationDuration: 1200,
                                           // animationType: ,
-                                          value: double.parse(detail['data']['Windspeed']??widget.speed),
+                                          value: double.parse(detail['data']['Windspeed']??widget.speed)*3.33,
+                                          // value: double.parse(detail['data']['Windspeed']??widget.speed),
                                           color: MyColors.secondarycolor,
                                           cornerStyle: CornerStyle.bothCurve,
                                           enableAnimation: true,
@@ -290,7 +317,8 @@ class _DetailPageState extends State<DetailPage> {
                                             BorderRadius.circular(100)),
                                     child: Center(
                                         child: MainHeadingText(
-                                            text: '${detail['data']['Windspeed']??widget.speed}',
+                                            // text: '${detail['data']['Windspeed']??widget.speed}',
+                                            text: '0',
                                             fontSize: 10,
                                             fontFamily: 'bold',
                                             color: MyColors.white)),
@@ -307,7 +335,7 @@ class _DetailPageState extends State<DetailPage> {
                                             BorderRadius.circular(100)),
                                     child: Center(
                                         child: MainHeadingText(
-                                            text: '100',
+                                            text: '30',
                                             fontSize: 10,
                                             fontFamily: 'bold',
                                             color: MyColors.white)),
@@ -369,7 +397,7 @@ class _DetailPageState extends State<DetailPage> {
                       )
                     ],
                   ),
-                  vSizedBox6,
+                  vSizedBox4,
                   SizedBox(
                     height: 40,
                     child: ListView(
@@ -474,94 +502,99 @@ class _DetailPageState extends State<DetailPage> {
                       ],
                     ),
                   ),
-                  vSizedBox4,
-                  // Text('${detail['production']}'),
+                  vSizedBox,
                   if (detail['production'] != null && isProduction)
                     Container(
 
                       padding: const EdgeInsets.all(10),
                       width: double.infinity,
-                      height: 300,
-                      child: LineChart(
+                      height: 210,
+                      child: BarChart(
 
+                          BarChartData(
 
-                        LineChartData(
-                         gridData: FlGridData(),
-
-                          extraLinesData: ExtraLinesData(
-                            extraLinesOnTop: true,
-                            verticalLines: [
-                              VerticalLine(x: 1,color: Colors.white, strokeWidth: 1.5, )
-                            ],
-                            horizontalLines: [
-                              HorizontalLine(y: 0,color: Colors.white, strokeWidth: 1.5,)
-                            ]
-                          ),
-                          maxX: 50,
-                          maxY: 8500,
-                          baselineX: 5,
-                          // lineTouchData: LineTouchData,
-
-
-
-                          backgroundColor: MyColors.primaryColor,
-                            borderData: FlBorderData(show: true,),
-
+                            maxY: 5000,
+                            minY: 0,
+                            // rangeAnnotations: RangeAnnotations(
+                            //   horizontalRangeAnnotations: [HorizontalRangeAnnotation()]
+                            // ),
+                            barTouchData: BarTouchData(
+                              enabled: true,
+                              // touchCallback: (){
+    // setState(() {
+    // if (!event.isInterestedForInteractions ||
+    // barTouchResponse == null ||
+    // barTouchResponse.spot == null) {
+    // touchedIndex = -1;
+    // return;
+    // }
+    // touchedIndex = barTouchResponse.spot!.touchedBarGroupIndex;
+    //                           }
+                            ),
                             titlesData: FlTitlesData(
                               show: true,
+                              leftTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  getTitlesWidget: (double m, TitleMeta a){
 
-                              // leftTitles:AxisTitles(drawBehindEverything: true,axisNameWidget: Container(
-                              //
-                              //
-                              //   child: Column(
-                              //     mainAxisAlignment: MainAxisAlignment.end,
-                              //     children: [
-                              //       Container(
-                              //         height: 3,
-                              //         width: double.infinity,
-                              //         color: Colors.white,
-                              //       )
-                              //     ],
-                              //   ),
-                              // )) ,
-                              // bottomTitles: AxisTitles(drawBehindEverything: true,axisNameWidget:Column(
-                              //   mainAxisAlignment: MainAxisAlignment.start,
-                              //   children: [
-                              //     Container(
-                              //       height: 3,
-                              //       width: double.infinity,
-                              //       color: Colors.white,
-                              //     )
-                              //   ],
-                              // ),
-                              // )
+                                      return Text(a.formattedValue, style: TextStyle(color: Colors.white, fontSize: 12),);
+                                  }
+
+                                ),
+                              ),
+
+                              bottomTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                    showTitles: true,
+                                     // interval: 3,
+                                    // reservedSize:5 ,
+                                    getTitlesWidget: (double m, TitleMeta a){
+                                      // print(m);
+                                      if(m%3==0)
+                                      return Text(a.formattedValue.toString(), style: TextStyle(color: Colors.white, fontSize: 12),);
+                                      else
+                                        return Text("");
+                                    }
+
+                                ),
+                              ),
+                              topTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles:false ,
+                                ),
+                              ),
+                              rightTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: false,
+                                ),
+                              ),
                             ),
-                            lineBarsData: [
-                              LineChartBarData(
-                                  dotData: FlDotData(show: false),
-                                  color: MyColors.white,
+                            borderData: FlBorderData(
+                              border: Border(
+                                left: BorderSide(
+                                    width: 2,
+                                    color: Colors.white,
+                                    style: BorderStyle.solid), //BorderSide
+                                bottom:BorderSide(
+                                    width: 2,
+                                    color: Colors.white,
+                                    style: BorderStyle.solid),
+
+                              ),
+                              show: true,
+                            ),
+
+                            barGroups: makeGroupData(),
+                            gridData: FlGridData(show: true
+                            ),
+                          ),
 
 
-                                  // isStepLineChart: true,
-                                  spots: [
-                                    for (int i = 0;
-                                        i < detail['production']['data'].length;
-                                        i++)
-                                      // for(int j=0;j<6;j++)
-                                      FlSpot(
-                                          double.parse(detail['production']
-                                                  ['data'][i]['date']
-                                              .toString()),
-                                          double.parse(detail['production']
-                                                  ['data'][i]['value']
-                                              .toString())),
 
-                                  ]),
-
-                            ]),
                       ),
                     ),
-                  if (detail['powerSpeed'] != null && isSpeed)
+                  if (detail['powerSpeed'] != null && isSpeed && false)
                     Container(
 
                       padding: const EdgeInsets.all(10),
@@ -586,9 +619,9 @@ class _DetailPageState extends State<DetailPage> {
                                   HorizontalLine(y: 895,color: Colors.white, strokeWidth: 1.5,)
                                 ]
                             ),
-                            maxX: 50,
-                            maxY: 8500,
-                            baselineX: 5,
+                            maxX: 24,
+                            maxY: 30,
+                            baselineX: 1,
                             // lineTouchData: LineTouchData,
 
 
@@ -648,80 +681,96 @@ class _DetailPageState extends State<DetailPage> {
                             ]),
                       ),
                     ),
-                  if (detail['powerSpeed'] != null && isPower)
+                  if (detail['powerSpeed'] != null && isSpeed)
                     Container(
 
                       padding: const EdgeInsets.all(10),
                       width: double.infinity,
-                      height: 300,
+                      height: 210,
                       child: LineChart(
 
 
                         LineChartData(
-                            gridData: FlGridData(),
+                            gridData: FlGridData(show:true),
+                            borderData: FlBorderData(
+                              border: Border(
+                                left: BorderSide(
+                                    width: 2,
+                                    color: Colors.white,
+                                    style: BorderStyle.solid), //BorderSide
+                                bottom:BorderSide(
+                                    width: 2,
+                                    color: Colors.white,
+                                    style: BorderStyle.solid),
+
+                              ),
+                              show: true,
+                            ),
 
                             extraLinesData: ExtraLinesData(
                                 extraLinesOnTop: true,
-                                verticalLines: [
-                                  VerticalLine(x: 0,color: Colors.white, strokeWidth: 1.5, )
-                                ],
-                                horizontalLines: [
-                                  HorizontalLine(y: 850,color: Colors.white, strokeWidth: 1.5,)
-                                ]
+
                             ),
-                            maxX: 50,
-                            maxY: 8500,
-                            baselineX: 5,
+                            maxX: 24,
+                            minX:0,
+                            minY:0,
+                            maxY: 30,
+                            baselineX: 1,
                             // lineTouchData: LineTouchData,
 
 
 
                             backgroundColor: MyColors.primaryColor,
-                            borderData: FlBorderData(show: true,),
+                            // borderData: FlBorderData(show: true,),
 
                             titlesData: FlTitlesData(
-                              show: true,
+                                topTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles:false ,
+                                  ),
+                                ),
+                                rightTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: false,
+                                  ),
+                                ),
 
-                              // leftTitles:AxisTitles(drawBehindEverything: true,axisNameWidget: Container(
-                              //
-                              //
-                              //   child: Column(
-                              //     mainAxisAlignment: MainAxisAlignment.end,
-                              //     children: [
-                              //       Container(
-                              //         height: 3,
-                              //         width: double.infinity,
-                              //         color: Colors.white,
-                              //       )
-                              //     ],
-                              //   ),
-                              // )) ,
-                              // bottomTitles: AxisTitles(drawBehindEverything: true,axisNameWidget:Column(
-                              //   mainAxisAlignment: MainAxisAlignment.start,
-                              //   children: [
-                              //     Container(
-                              //       height: 3,
-                              //       width: double.infinity,
-                              //       color: Colors.white,
-                              //     )
-                              //   ],
-                              // ),
-                              // )
+                                  leftTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                        showTitles: true,
+                                        getTitlesWidget: (double m, TitleMeta a){
+
+                                          return Text(a.formattedValue, style: TextStyle(color: Colors.white, fontSize: 12),);
+                                        }
+
+                                    ),
+                                  ),
+
+                                  bottomTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                        showTitles: true,
+                                        // interval: 3,
+                                        // reservedSize:5 ,
+                                        getTitlesWidget: (double m, TitleMeta a){
+
+                                            return Text(a.formattedValue.toString(), style: TextStyle(color: Colors.white, fontSize: 12),);
+
+                                        }
+
+                                    ),
+                                  ),
                             ),
                             lineBarsData: [
                               LineChartBarData(
                                   dotData: FlDotData(show: false),
                                   color: MyColors.white,
-
-
-                                  // isStepLineChart: true,
                                   spots: [
                                     for (int i = 0;
                                     i < detail['powerSpeed'].length;
                                     i++)
                                     // for(int j=0;j<6;j++)
                                       FlSpot(
-                                          double.parse(detail['powerSpeed'][i]['Power']
+                                          double.parse(detail['powerSpeed'][i]['WindSpeed']
                                               .toString()),
                                           detail['powerSpeed'][i]['final_time']),
 
@@ -731,8 +780,106 @@ class _DetailPageState extends State<DetailPage> {
                             ]),
                       ),
                     ),
+                  if (detail['powerSpeed'] != null && isPower)
+                    Container(
 
-                  vSizedBox6,
+                      padding: const EdgeInsets.all(10),
+                      width: double.infinity,
+                      height: 210,
+                      child: LineChart(
+
+
+                        LineChartData(
+                            gridData: FlGridData(show:true),
+
+                            minY: -50,
+                            maxX: 24,
+                            minX:0,
+                            maxY: 1000,
+                            // baselineX: 5,
+                            // lineTouchData: LineTouchData,
+
+
+
+                            backgroundColor: MyColors.primaryColor,
+                            borderData: FlBorderData(
+                              border: Border(
+                                left: BorderSide(
+                                    width: 2,
+                                    color: Colors.white,
+                                    style: BorderStyle.solid), //BorderSide
+                                bottom:BorderSide(
+                                    width: 2,
+                                    color: Colors.white,
+                                    style: BorderStyle.solid),
+
+                              ),
+                              show: true,
+                            ),
+
+                            titlesData: FlTitlesData(
+
+                                  topTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles:false ,
+                                    ),
+                                  ),
+                                  rightTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles: false,
+                                    ),
+                                  ),
+                              leftTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                    showTitles: true,
+                                    getTitlesWidget: (double m, TitleMeta a){
+
+                                      return Text(a.formattedValue, style: TextStyle(color: Colors.white, fontSize: 12),);
+                                    }
+
+                                ),
+                              ),
+
+                              bottomTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                    showTitles: true,
+                                    // interval: 3,
+                                    // reservedSize:5 ,
+                                    getTitlesWidget: (double m, TitleMeta a){
+
+                                      return Text(a.formattedValue.toString(), style: TextStyle(color: Colors.white, fontSize: 12),);
+
+                                    }
+
+                                ),
+                              ),
+
+                            ),
+                            lineBarsData: [
+                              // LineChartBarData(
+                              //     dotData: FlDotData(show: false),
+                              //     color: MyColors.white,
+                              //
+                              //
+                              //     // isStepLineChart: true,
+                              //     spots: [
+                              //       for (int i = 0;
+                              //       i < detail['powerSpeed'].length;
+                              //       i++)
+                              //       // for(int j=0;j<6;j++)
+                              //         FlSpot(
+                              //             double.parse(detail['powerSpeed'][i]['Power']
+                              //                 .toString()),
+                              //             detail['powerSpeed'][i]['final_time']),
+                              //
+                              //     ]
+                              // ),
+
+                            ]),
+                      ),
+                    ),
+
+                  vSizedBox2,
                   MainHeadingText(
                     text: 'Current Status',
                     color: MyColors.white,
@@ -819,46 +966,46 @@ class _DetailPageState extends State<DetailPage> {
                             ),
                           ],
                         ),
-                        vSizedBox,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            MainHeadingText(
-                              text: 'GAD for This Week',
-                              color: MyColors.white,
-                              fontSize: 18,
-                              fontFamily: 'medium',
-                            ),
-                            MainHeadingText(
-                              text:
-                                  '${detail['data']['GAD_for_This_Week'] ?? 'NIL'}',
-                              color: MyColors.white,
-                              fontSize: 14,
-                              fontFamily: 'bold',
-                            ),
-                          ],
-                        ),
-                        vSizedBox,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            MainHeadingText(
-                              text: 'GAD for Previous Week',
-                              color: MyColors.white,
-                              fontSize: 18,
-                              fontFamily: 'medium',
-                            ),
-                            MainHeadingText(
-                              text:
-                                  '${detail['data']['GAD_for_Previous_Week'] ?? 'NIL'}',
-                              color: MyColors.white,
-                              fontSize: 14,
-                              fontFamily: 'bold',
-                            ),
-                          ],
-                        ),
+                        // vSizedBox,
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   crossAxisAlignment: CrossAxisAlignment.center,
+                        //   children: [
+                        //     MainHeadingText(
+                        //       text: 'GAD for This Week',
+                        //       color: MyColors.white,
+                        //       fontSize: 18,
+                        //       fontFamily: 'medium',
+                        //     ),
+                        //     MainHeadingText(
+                        //       text:
+                        //           '${detail['data']['GAD_for_This_Week'] ?? 'NIL'}',
+                        //       color: MyColors.white,
+                        //       fontSize: 14,
+                        //       fontFamily: 'bold',
+                        //     ),
+                        //   ],
+                        // ),
+                        // vSizedBox,
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   crossAxisAlignment: CrossAxisAlignment.center,
+                        //   children: [
+                        //     MainHeadingText(
+                        //       text: 'GAD for Previous Week',
+                        //       color: MyColors.white,
+                        //       fontSize: 18,
+                        //       fontFamily: 'medium',
+                        //     ),
+                        //     MainHeadingText(
+                        //       text:
+                        //           '${detail['data']['GAD_for_Previous_Week'] ?? 'NIL'}',
+                        //       color: MyColors.white,
+                        //       fontSize: 14,
+                        //       fontFamily: 'bold',
+                        //     ),
+                        //   ],
+                        // ),
                         vSizedBox,
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -884,6 +1031,26 @@ class _DetailPageState extends State<DetailPage> {
                         //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         //   crossAxisAlignment: CrossAxisAlignment.center,
                         //   children: [
+                        //     MainHeadingText(
+                        //       text: 'GAD for Year',
+                        //       color: MyColors.white,
+                        //       fontSize: 18,
+                        //       fontFamily: 'medium',
+                        //     ),
+                        //     MainHeadingText(
+                        //       text:
+                        //       '${detail['data']['GAD_for_This_month'] ?? 'NIL'}',
+                        //       color: MyColors.white,
+                        //       fontSize: 14,
+                        //       fontFamily: 'bold',
+                        //     ),
+                        //   ],
+                        // ),
+                        // vSizedBox,
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   crossAxisAlignment: CrossAxisAlignment.center,
+                        //   children: [
                         //     MainHeadingText(text: 'GAD for Year', color: MyColors.white, fontSize: 18, fontFamily: 'medium',),
                         //     MainHeadingText(text: '${detail['data']['GAD_for_Today']} Kwh', color: MyColors.white, fontSize: 14, fontFamily: 'bold',),
                         //   ],
@@ -897,5 +1064,53 @@ class _DetailPageState extends State<DetailPage> {
             ),
     );
   }
+  List<BarChartGroupData> makeGroupData(
+      {
+        bool isTouched = false,
+        List<int> showTooltips = const [1],
+      }
+      ) {
 
+    List<BarChartGroupData> c = [];
+
+    for (int i = 0; i < detail['production']['data'].length;i++){
+      double y = double.parse(detail['production']['data'][i]['value'].toString());
+      int x = int.parse(detail['production']['data'][i]['date'].toString());
+
+      c.add(
+          BarChartGroupData(
+        x: x,
+        barRods: [
+          BarChartRodData(
+            borderRadius: BorderRadius.circular(0),
+            toY: y,
+            color: isTouched ? Colors.orange :Colors.yellow,
+            width: 8,
+
+            backDrawRodData: BackgroundBarChartRodData(
+              show: true,
+              // toY: 20,
+              color: Colors.yellow,
+            ),
+          ),
+        ],
+        showingTooltipIndicators: showTooltips,
+      )
+      );
+    }
+
+      // FlSpot(
+      //     double.parse(detail['production']
+      //     ['data'][i]['date']
+      //         .toString()),
+      //     double.parse(detail['production']
+      //     ['data'][i]['value']
+      //         .toString())),
+
+
+
+
+
+    return c;
+  }
 }

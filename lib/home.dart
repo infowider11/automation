@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Image.asset('assets/images/home-icon.png', width: 12,),
                             hSizedBox05,
-                            MainHeadingText(text: 'Total Power', fontSize: 14, color: MyColors.primaryColor.withOpacity(0.5),),
+                            MainHeadingText(text: 'Total Power', fontSize: 13, color: MyColors.primaryColor.withOpacity(0.5),),
                           ],
                         ),
                         Divider(
@@ -135,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Image.asset('assets/images/icon-2.png', width: 12,),
                             hSizedBox05,
-                            MainHeadingText(text: 'Total Export', fontSize: 14, color: MyColors.primaryColor.withOpacity(0.5),),
+                            MainHeadingText(text: 'Total Export', fontSize: 13, color: MyColors.primaryColor.withOpacity(0.5),),
                           ],
                         ),
                         Divider(

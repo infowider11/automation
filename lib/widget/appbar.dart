@@ -101,6 +101,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
 AppBar appBar(
     {
       String title = '',
+      Widget? widgetTitle = null,
       String location = '',
       AppBarType appBarType = AppBarType.main,
       Color appBarColor = Colors.transparent,
@@ -153,11 +154,11 @@ AppBar appBar(
         }else{
           return AppBar(
             automaticallyImplyLeading: true,
-            title: Text(
+            title: (widgetTitle==true)?Text(
               title,
               style: TextStyle(
                 color: MyColors.white, fontFamily: 'SemiBold', fontSize: 18),
-            ),
+            ):widgetTitle,
             leadingWidth: 35,
             leading: GestureDetector(
               onTap: (){

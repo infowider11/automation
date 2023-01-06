@@ -27,7 +27,7 @@ getData()async{
     res = await Webservices.getData('', data);
 
     log("res---------getlist----${res}");
-    log("res---------getlist----${res['data'].length}");
+    log("res---------getlist----${res['data']}");
     Total_Export = res['Total_Export'].toString();
     location = res['CurrentState'].toString();
     WTG_Run = res['WTG_Run'].toString();

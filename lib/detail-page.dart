@@ -46,6 +46,8 @@ class _DetailPageState extends State<DetailPage> {
   bool isPower = false;
   bool isProduction = false;
 
+  int maxValueProduction = 1000;
+
   List<FlSpot> buildpowerflSpots(){
 
 
@@ -113,6 +115,17 @@ class _DetailPageState extends State<DetailPage> {
       detail['powerSpeed'][i]['final_time']=double.parse(fTime.toString());
       // log('ftime------------------${fTime}');
     }
+  for(int i=0;i<detail['production']['data'].length;i++){
+   if(detail['production']['data'][i]['value']>maxValueProduction){
+     try{
+       maxValueProduction = (detail['production']['data'][i]['value'] as double).ceil();
+     }catch(e){
+       maxValueProduction = detail['production']['data'][i]['value'];
+     }
+   }
+    }
+
+  maxValueProduction += 1000-(maxValueProduction%1000);
 
 
     setState(() {
@@ -135,18 +148,21 @@ class _DetailPageState extends State<DetailPage> {
 
           context: context,
           appBarType: AppBarType.sub,
-          title: 'Information',
+          // title: 'Information',
+          title: '',
           widgetTitle: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
             children: [
-            Text("Information"),
+            // Text("Information"),
+              Container(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
+                vSizedBox05,
               MainHeadingText(
 
-                text: '${widget.data['CurrentSite']}',
+                text: '${widget.data['Device_Name']}',
                 fontFamily: 'bold',
                 fontSize: 22,
                 color: MyColors.white,
@@ -556,7 +572,7 @@ class _DetailPageState extends State<DetailPage> {
 
                           BarChartData(
 
-                            maxY: 8000,
+                            maxY: maxValueProduction +0.0,
                             minY: 0,
                             // rangeAnnotations: RangeAnnotations(
                             //   horizontalRangeAnnotations: [HorizontalRangeAnnotation()]
@@ -581,7 +597,8 @@ class _DetailPageState extends State<DetailPage> {
                                   showTitles: true,
                                   getTitlesWidget: (double m, TitleMeta a){
 
-                                      return Text(a.formattedValue, style: TextStyle(color: Colors.white, fontSize: 12),);
+
+                                      return Text(a.formattedValue, style: TextStyle(color: Colors.white, fontSize: 9),);
                                   }
 
                                 ),
@@ -593,11 +610,12 @@ class _DetailPageState extends State<DetailPage> {
                                      // interval: 3,
                                     // reservedSize:5 ,
                                     getTitlesWidget: (double m, TitleMeta a){
+                                      print('kjlsjljdljdljlsjfklsdkjl---------');
                                       // print(m);
-                                      if(m%3==0)
+                                      // if(m%3==0)
                                       return Text(a.formattedValue.toString(), style: TextStyle(color: Colors.white, fontSize: 12),);
-                                      else
-                                        return Text("");
+                                      // else
+                                      //   return Text("");
                                     }
 
                                 ),
@@ -666,10 +684,11 @@ class _DetailPageState extends State<DetailPage> {
                                 extraLinesOnTop: false,
 
                             ),
-                            maxX: double.parse('${detail['powerWindSpeed']['windspeed'].length}'),
+                            maxX: 23,
+                            // maxX: double.parse('${detail['powerWindSpeed']['windspeed'].length}'),
                             minX:0,
                             minY:0,
-                            maxY: 5,
+                            maxY: 30,
                             baselineX: 1,
                             // lineTouchData: LineTouchData,
 
@@ -693,9 +712,11 @@ class _DetailPageState extends State<DetailPage> {
                                   leftTitles: AxisTitles(
                                     sideTitles: SideTitles(
                                         showTitles: true,
+                                        interval: 5,
                                         getTitlesWidget: (double m, TitleMeta a){
 
                                           return Text(a.formattedValue, style: TextStyle(color: Colors.white, fontSize: 12),);
+
                                         }
 
                                     ),
@@ -706,11 +727,19 @@ class _DetailPageState extends State<DetailPage> {
                                         showTitles: true,
                                         interval: 1,
                                         // reservedSize:10 ,
+                                        reservedSize: 38,
 
 
                                         getTitlesWidget: (double m, TitleMeta a){
-
-                                            return Text(a.formattedValue.toString(), style: TextStyle(color: Colors.white, fontSize: 10),);
+                                          return Column(
+                                            children: [
+                                              SizedBox(height: 4,),
+                                              if(m%2==0)
+                                                vSizedBox2,
+                                              Text(a.formattedValue.toString(), style: TextStyle(color: Colors.white, fontSize: 10),),
+                                            ],
+                                          );
+                                            // return Text(a.formattedValue.toString(), style: TextStyle(color: Colors.white, fontSize: 10),);
 
                                         }
 
@@ -728,6 +757,7 @@ class _DetailPageState extends State<DetailPage> {
                                   color: Colors.blue,
 
                                   spots: [
+                                    if(detail['powerWindSpeed']['windspeed']!=null)
                                     for (int i = 0;
                                     i < detail['powerWindSpeed']['windspeed'].length;
                                     i++)
@@ -773,10 +803,11 @@ class _DetailPageState extends State<DetailPage> {
                               extraLinesOnTop: false,
 
                             ),
-                            maxX: 24,
+                            maxX: 23,
                             minX:1,
-                            minY:0,
-                            maxY: 40,
+                            minY:-10,
+                            maxY: 1000,
+                            // maxY: 1000,
                             baselineX: 1,
                             // lineTouchData: LineTouchData,
 
@@ -800,9 +831,10 @@ class _DetailPageState extends State<DetailPage> {
                               leftTitles: AxisTitles(
                                 sideTitles: SideTitles(
                                     showTitles: true,
+                                    interval: 200,
                                     getTitlesWidget: (double m, TitleMeta a){
 
-                                      return Text(a.formattedValue, style: TextStyle(color: Colors.white, fontSize: 12),);
+                                      return Text(a.formattedValue, style: TextStyle(color: Colors.white, fontSize: 9),);
                                     }
 
                                 ),

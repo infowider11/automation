@@ -1,5 +1,7 @@
+
+
+
 import 'dart:developer';
-import 'dart:math';
 
 import 'package:automation/services/auth.dart';
 import 'package:automation/services/getDashboardData.dart';
@@ -57,6 +59,8 @@ class _DetailPageState extends State<DetailPage> {
     List points = [];
 
 
+    // if(detail['powerWindSpeed']['powerkw'].runtimeType)
+
     (detail['powerWindSpeed']['powerkw'] as Map).forEach((key, value){
       print('the points are(${key}, ${value[1]})');
     points.add(
@@ -105,32 +109,40 @@ class _DetailPageState extends State<DetailPage> {
 
     print('object-----------$data');
     detail = await Webservices.getData('', data);
-    // log("detail---------detail----${detail['powerSpeed']}");
-    for(int i=0;i<detail['powerSpeed'].length;i++){
-      var time=detail['powerSpeed'][i]['Time_S'].toString().split(':')[0];
-      var time1=detail['powerSpeed'][i]['Time_S'].toString().split(':')[1];
-      var time2=detail['powerSpeed'][i]['Time_S'].toString().split(':')[2];
-      // log('message-----${detail['powerSpeed'][i]['Time_S']}---------${time} --------${time2}');
-      var fTime=(int.parse(time.toString())*60)+(int.parse(time1.toString())+(int.parse(time.toString())/60));
-      detail['powerSpeed'][i]['final_time']=double.parse(fTime.toString());
-      // log('ftime------------------${fTime}');
-    }
-  for(int i=0;i<detail['production']['data'].length;i++){
-   if(detail['production']['data'][i]['value']>maxValueProduction){
-     try{
-       maxValueProduction = (detail['production']['data'][i]['value'] as double).ceil();
-     }catch(e){
-       maxValueProduction = detail['production']['data'][i]['value'];
-     }
-   }
-    }
-
-  maxValueProduction += 1000-(maxValueProduction%1000);
-
-
     setState(() {
       load = false;
     });
+    // log("is list or object ---------------${detail['powerWindSpeed']['powerkw'].runtimeType}");
+    if(detail['status'].toString()=='1'){
+      log("detail---------detail----${detail['powerSpeed']}");
+      for(int i=0;i<detail['powerSpeed'].length;i++){
+        var time=detail['powerSpeed'][i]['Time_S'].toString().split(':')[0];
+        var time1=detail['powerSpeed'][i]['Time_S'].toString().split(':')[1];
+        var time2=detail['powerSpeed'][i]['Time_S'].toString().split(':')[2];
+        // log('message-----${detail['powerSpeed'][i]['Time_S']}---------${time} --------${time2}');
+        var fTime=(int.parse(time.toString())*60)+(int.parse(time1.toString())+(int.parse(time.toString())/60));
+        detail['powerSpeed'][i]['final_time']=double.parse(fTime.toString());
+        // log('ftime------------------${fTime}');
+      }
+      for(int i=0;i<detail['production']['data'].length;i++){
+        if(detail['production']['data'][i]['value']>maxValueProduction){
+          try{
+            maxValueProduction = (detail['production']['data'][i]['value'] as double).ceil();
+          }catch(e){
+            maxValueProduction = detail['production']['data'][i]['value'];
+          }
+        }
+      }
+
+      maxValueProduction += 1000-(maxValueProduction%1000);
+      setState(() {
+
+      });
+    }
+    else{
+      detail={};
+    }
+
   }
 
   @override
@@ -180,7 +192,7 @@ class _DetailPageState extends State<DetailPage> {
           ? CustomLoader()
           : SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
+              child:detail['status'].toString()=='1'? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   vSizedBox,
@@ -758,11 +770,12 @@ class _DetailPageState extends State<DetailPage> {
 
                                   spots: [
                                     if(detail['powerWindSpeed']['windspeed']!=null)
-                                    for (int i = 0;
+
+                                        for (int i = 0;
                                     i < detail['powerWindSpeed']['windspeed'].length;
                                     i++)
                                     // for(int j=0;j<6;j++)
-
+                                      if(detail['powerWindSpeed']['windspeed'][i]['x']!=null && detail['powerWindSpeed']['windspeed'][i]['y']!=null)
                                       FlSpot(
                                         double.parse('${detail['powerWindSpeed']['windspeed'][i]['x']}'),
                                           double.parse('${detail['powerWindSpeed']['windspeed'][i]['y']}').floorToDouble(),
@@ -1159,6 +1172,11 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                   vSizedBox2
                 ],
+              )
+                  :
+              Container(
+                height: 300,
+                child: Center(child: Text('No communication!'),),
               ),
             ),
     );
